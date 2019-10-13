@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour {
 
-    public float walkSpeed = 2;
+    public float walkSpeed = 1.5f;
+        
     public float runSpeed = 6;
     public float gravity = -12;
     public float jumpHeight = 1;
@@ -18,14 +19,22 @@ public class Movement : MonoBehaviour {
     float speedSmoothVelocity;
     float currentSpeed;
     float velocityY;
-
+    public bool canMove;
     public Animator animator;
     Transform cameraT;
     public CharacterController controller;
+
+
+    // Raycast Information
+    [Header("RayCast info")]
+    public float PushMinDistance = 1f;
+    public float LedgeMinDistance = 1f;
+    public GameObject RayForwardTarget;
     // AnimationController AnimController;
 
     void Start()
     {
+        canMove = true;
         //   AnimController.GetComponent<AnimationController>();
         //animator = GetComponentInChildren<Animator>();
      animator  = gameObject.GetComponentInChildren<Animator>();
@@ -38,6 +47,8 @@ public class Movement : MonoBehaviour {
 
     void Update()
     {
+        if (canMove == false)
+            return;
         // input
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         Vector2 inputDir = input.normalized;
@@ -55,6 +66,8 @@ public class Movement : MonoBehaviour {
 
         animator.SetFloat("Forward", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
 
+        RayGroundCheck();
+        RayObsticalCheck();
     }
 
     void Move(Vector2 inputDir, bool running)
@@ -108,5 +121,71 @@ public class Movement : MonoBehaviour {
             return float.MaxValue;
         }
         return smoothTime / airControlPercent;
+    }
+
+    public void RayGroundCheck()
+    {
+        
+            Ray ray = new Ray(transform.position, Vector3.down);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 1f))
+            {
+
+                float Distance = Vector3.Distance(hit.point, transform.position);
+            if (controller.isGrounded == false)
+            {
+                JumpingUp(Distance);
+             //   Debug.Log(Distance);
+            }
+            }
+        
+    }
+
+
+    public void JumpingUp(float distance)
+    {
+        animator.SetFloat("JumpingStateUp", distance);
+    }
+
+
+    public void RayObsticalCheck()
+    {
+
+        Ray ray2 = new Ray(transform.position, Vector3.forward);
+        RaycastHit hit2;
+        Debug.DrawLine(RayForwardTarget.transform.localPosition, RayForwardTarget.transform.forward , Color.red, 1f);
+        if (Physics.Raycast(ray2, out hit2, 1f))
+        {
+
+            float Distance = Vector3.Distance(hit2.point, transform.position);
+            Debug.Log(Distance);
+            if (hit2.collider.gameObject.tag == "Pushable" && Distance <= PushMinDistance)
+            {
+                // Can Push
+                Debug.Log("CanPush");
+            }
+
+            if (hit2.collider.gameObject.tag == "Ledge" && Distance <= LedgeMinDistance)
+            {
+                // is at the ledge
+                Debug.Log("IsAtLedge");
+            }
+               
+           
+        }
+    }
+
+
+   public void HitLedge()
+    {
+        animator.SetBool("HitLedge", true);
+        canMove = false;
+        Invoke("DisableHitLedge", 2f);
+    }
+    public void DisableHitLedge()
+    {
+        animator.SetBool("HitLedge", false);
+        canMove = true;
     }
 }
