@@ -13,8 +13,15 @@ public class PickUp : MonoBehaviour {
         WorldKey,
         Health,
     }
+    public enum RotDirection
+    {
+        Right,
+        forward,
+        up,
 
+    }
     public int Amount = 1;
+    public RotDirection direction;
     public ItemType type;
     public float SpinSpeed = 5f;
     public GameObject ParticalEffect;
@@ -27,8 +34,19 @@ public class PickUp : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        transform.Rotate(Vector3.forward * SpinSpeed * Time.deltaTime);
-	}
+        if (direction == RotDirection.forward)
+        {
+            transform.Rotate(Vector3.forward * SpinSpeed * Time.deltaTime);
+        }
+        if (direction == RotDirection.Right)
+        {
+            transform.Rotate(Vector3.right * SpinSpeed * Time.deltaTime);
+        }
+        if (direction == RotDirection.up)
+        {
+            transform.Rotate(Vector3.up * SpinSpeed * Time.deltaTime);
+        }
+    }
 
     public void OnTriggerEnter(Collider other)
     {
