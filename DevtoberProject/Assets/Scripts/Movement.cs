@@ -32,6 +32,13 @@ public class Movement : MonoBehaviour {
     public GameObject RayForwardTarget;
     // AnimationController AnimController;
 
+       
+  
+    // Knock back
+    public float knockBackForce = 20f;
+    public float knockBackTime = 0.5f;
+    private float knockBackCounter;
+    private Vector3 moveDirection;
     void Start()
     {
         canMove = true;
@@ -47,31 +54,43 @@ public class Movement : MonoBehaviour {
 
     void Update()
     {
+
         if (canMove == false)
             return;
-        // input
-        Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        Vector2 inputDir = input.normalized;
-        bool running = Input.GetKey(KeyCode.LeftShift);
 
-        Move(inputDir, running);
+        
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Jump();
-        }
-        // animator
-        float animationSpeedPercent = ((running) ? currentSpeed / runSpeed : currentSpeed / walkSpeed * .5f);
-        // set name of forward animation here
 
-        animator.SetFloat("Forward", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
+            // input
+            Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            Vector2 inputDir = input.normalized;
+            bool running = Input.GetKey(KeyCode.LeftShift);
 
-        RayGroundCheck();
-        RayObsticalCheck();
+            Move(inputDir, running);
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Jump();
+            }
+            // animator
+            float animationSpeedPercent = ((running) ? currentSpeed / runSpeed : currentSpeed / walkSpeed * .5f);
+            // set name of forward animation here
+
+            animator.SetFloat("Forward", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
+
+            RayGroundCheck();
+            RayObsticalCheck();
+     
+       
     }
 
     void Move(Vector2 inputDir, bool running)
     {
+
+        // knock back 
+    if (knockBackCounter <= 0)
+    {
+
         if (inputDir != Vector2.zero)
         {
             float targetRotation = Mathf.Atan2(inputDir.x, inputDir.y) * Mathf.Rad2Deg + cameraT.eulerAngles.y;
@@ -81,10 +100,20 @@ public class Movement : MonoBehaviour {
         float targetSpeed = ((running) ? runSpeed : walkSpeed) * inputDir.magnitude;
         currentSpeed = Mathf.SmoothDamp(currentSpeed, targetSpeed, ref speedSmoothVelocity, GetModifiedSmoothTime(speedSmoothTime));
 
-        velocityY += Time.deltaTime * gravity;
-        Vector3 velocity = transform.forward * currentSpeed + Vector3.up * velocityY;
+            velocityY += Time.deltaTime * gravity;
+            moveDirection = transform.forward * currentSpeed + Vector3.up * velocityY;
+        }
+        else
+        {
+            knockBackCounter -= Time.deltaTime;
+        }
 
-        controller.Move(velocity * Time.deltaTime);
+        
+       
+
+        controller.Move(moveDirection * Time.deltaTime);
+
+        if(knockBackCounter <= 0)
         currentSpeed = new Vector2(controller.velocity.x, controller.velocity.z).magnitude;
 
         if (controller.isGrounded)
@@ -187,5 +216,17 @@ public class Movement : MonoBehaviour {
     {
         animator.SetBool("HitLedge", false);
         canMove = true;
+    }
+
+
+    // knock back when hert
+    public void KnockBack(Vector3 direction)
+    {
+        knockBackCounter = knockBackTime;
+
+       // direction = new Vector3(1f, 1f, 1f);
+        moveDirection = direction * knockBackForce;
+        moveDirection.y = knockBackForce/2 * gravity;
+
     }
 }
