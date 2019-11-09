@@ -23,6 +23,8 @@ public class PlayerAttack : MonoBehaviour
     public int damage = 10;
     Animator anim;
 
+    public float AnimationSpeed = 0.3f;
+
     public float enemyKnockBackStrenght = 4f;
     // Start is called before the first frame update
     void Start()
@@ -37,6 +39,7 @@ public class PlayerAttack : MonoBehaviour
         {
             if (Input.GetKey(attackButton))
             {
+                anim.speed = AnimationSpeed;
                 anim.SetTrigger("Attack");
                 Collider[] enemiesToDamage = Physics.OverlapSphere(attackPos.position, attackRange, whatIsEnemies);
                 for(int i = 0; i < enemiesToDamage.Length; i++)
@@ -59,6 +62,7 @@ public class PlayerAttack : MonoBehaviour
         }
         else
         {
+            anim.speed = 1;
             timeBtwAttack -= Time.deltaTime;
         }
     }
