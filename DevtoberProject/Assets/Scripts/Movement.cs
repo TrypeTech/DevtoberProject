@@ -39,6 +39,9 @@ public class Movement : MonoBehaviour {
     public float knockBackTime = 0.5f;
     private float knockBackCounter;
     private Vector3 moveDirection;
+    
+
+  
     void Start()
     {
         canMove = true;
@@ -49,7 +52,8 @@ public class Movement : MonoBehaviour {
         controller = GetComponent<CharacterController>();
         //controller = gameObj<CharacterController>();
         //  animator.SetBool("Aim", false);
-        
+
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update()

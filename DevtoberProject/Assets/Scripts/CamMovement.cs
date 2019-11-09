@@ -35,6 +35,7 @@ public class CamMovement : MonoBehaviour {
         float inputX = Input.GetAxis("RightStickHorizontal");
         float inputZ = Input.GetAxis("RightStickVertical");
 
+      
         yaw += Input.GetAxis("Mouse X") + inputX * mouseSensitivity;
         pitch -= Input.GetAxis("Mouse Y") + inputZ * mouseSensitivity;
         pitch = Mathf.Clamp(pitch, pitchMinMax.x, pitchMinMax.y);
