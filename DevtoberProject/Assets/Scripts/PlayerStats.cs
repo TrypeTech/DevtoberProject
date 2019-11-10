@@ -15,7 +15,7 @@ public class PlayerStats : MonoBehaviour {
     private float flashCounter;
     public float flashLength = 0.1f;
 
-    public float invincibilityLength = 2f;
+    public float invincibilityLength = 1.2f;
     public float invincibilityCounter;
 
     Movement movement;

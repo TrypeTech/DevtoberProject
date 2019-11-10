@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour {
 
-    public float walkSpeed = 1.5f;
+    public float walkSpeed = 0.5f;
         
-    public float runSpeed = 6;
+    public float runSpeed = 1;
     public float gravity = -12;
     public float jumpHeight = 1;
     [Range(0, 1)]
@@ -35,7 +35,7 @@ public class Movement : MonoBehaviour {
        
   
     // Knock back
-    public float knockBackForce = 20f;
+    public float knockBackForce = 2f;
     public float knockBackTime = 0.5f;
     private float knockBackCounter;
     private Vector3 moveDirection;
@@ -82,8 +82,9 @@ public class Movement : MonoBehaviour {
 
             animator.SetFloat("Forward", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
 
-            RayGroundCheck();
-            RayObsticalCheck();
+        // ray jump and push
+           // RayGroundCheck();
+           // RayObsticalCheck();
      
        
     }

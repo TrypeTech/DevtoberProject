@@ -35,6 +35,7 @@ public class Enemy : MonoBehaviour {
     private float flashCounter;
     public float flashLenght = 0.07f;
     public bool Invencible;
+    public float enemieDieTime = 5f;
 
     // Use this for initialization
     void Start () {
@@ -50,6 +51,7 @@ public class Enemy : MonoBehaviour {
        
         // movement stuff 
         isIdle = true;
+        anim.SetBool("IsIdle", true);
         nav = GetComponent<NavMeshAgent>();
         Target = GameObject.FindGameObjectWithTag("Player");
         nav.speed = Speed;
@@ -70,9 +72,11 @@ public class Enemy : MonoBehaviour {
         if( dazedTime <= 0)
         {
             nav.speed = Speed;
+           // anim.SetBool("IsIdle" ,false);
         }
         else
         {
+          //  anim.SetBool("IsIdle", true);
             nav.speed = 0;
             dazedTime -= Time.deltaTime;
 
@@ -84,9 +88,11 @@ public class Enemy : MonoBehaviour {
 
         if (isIdle)
         {
-            if(distance <= MinDistanceToAttack)
+           anim.SetBool("isIdle", true);
+            if (distance <= MinDistanceToAttack)
             {
                 isIdle = false;
+                anim.SetBool("IsIdle", false);
             }
             if(nav != null)
             nav.SetDestination(transform.position);
@@ -98,11 +104,13 @@ public class Enemy : MonoBehaviour {
             if (distance >= StopChaseingDistance)
             {
                 isIdle = true;
+                anim.SetBool("IsIdle", true);
             }
             else
             {
                 if(nav != null)
                 nav.SetDestination(Target.transform.position);
+                anim.SetBool("IsIdle", false);
             }
         }
             
@@ -144,10 +152,18 @@ public class Enemy : MonoBehaviour {
 
         if(health <= 0)
         {
-            Destroy(gameObject);
+            isIdle = true;
+            anim.SetBool("Die", true);
+            nav.SetDestination(transform.position);
+            // set destroy enemy time
+            Invoke("DestroyEnemy", enemieDieTime);
         }
     }
 
+    public void DestroyEnemy()
+    {
+        Destroy(gameObject);
+    }
     // enemy received damage from player
     public void TakeDamage(int damage)
     {

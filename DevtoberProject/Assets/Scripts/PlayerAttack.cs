@@ -39,7 +39,7 @@ public class PlayerAttack : MonoBehaviour
         {
             if (Input.GetKey(attackButton))
             {
-                anim.speed = AnimationSpeed;
+               //anim.speed = AnimationSpeed;
                 anim.SetTrigger("Attack");
                 Collider[] enemiesToDamage = Physics.OverlapSphere(attackPos.position, attackRange, whatIsEnemies);
                 for(int i = 0; i < enemiesToDamage.Length; i++)
@@ -62,7 +62,7 @@ public class PlayerAttack : MonoBehaviour
         }
         else
         {
-            anim.speed = 1;
+           // anim.speed = 1;
             timeBtwAttack -= Time.deltaTime;
         }
     }
