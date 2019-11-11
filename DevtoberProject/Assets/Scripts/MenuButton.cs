@@ -15,7 +15,8 @@ public class MenuButton : MonoBehaviour
     public enum ButtonType
     {
         LevelLoader,
-        ExitGame
+        ExitGame,
+        resumeGame
     }
     public ButtonType buttonType;
     // Start is called before the first frame update
@@ -60,6 +61,12 @@ public class MenuButton : MonoBehaviour
         else if(buttonType == ButtonType.ExitGame)
         {
             Application.Quit();
+        }
+        else if (buttonType == ButtonType.resumeGame)
+        {
+            PauseMenus pauseMenu;
+            pauseMenu = FindObjectOfType<PauseMenus>();
+            pauseMenu.Resume();
         }
     }
 }

@@ -39,7 +39,9 @@ public class Movement : MonoBehaviour {
     public float knockBackTime = 0.5f;
     private float knockBackCounter;
     private Vector3 moveDirection;
-    
+
+    // audio 
+    public AudioSource jumpSound;
 
   
     void Start()
@@ -135,7 +137,7 @@ public class Movement : MonoBehaviour {
     {
         if (controller.isGrounded)
         {
-
+            jumpSound.Play();
             float jumpVelocity = Mathf.Sqrt(-2 * gravity * jumpHeight);
             velocityY = jumpVelocity;
             Debug.Log("HitJumpbutton");

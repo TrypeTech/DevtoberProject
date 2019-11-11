@@ -25,6 +25,8 @@ public class PickUp : MonoBehaviour {
     public ItemType type;
     public float SpinSpeed = 5f;
     public GameObject ParticalEffect;
+    public AudioSource pickupSound;
+
     PlayerStats stats;
 	// Use this for initialization
 	void Start () {
@@ -52,6 +54,7 @@ public class PickUp : MonoBehaviour {
     {
         if (other.gameObject.tag == "Player")
         {
+            pickupSound.Play();
             Instantiate(ParticalEffect,transform.position, transform.rotation);
             if (type == ItemType.Coin)
             {
@@ -72,9 +75,10 @@ public class PickUp : MonoBehaviour {
             }
             if (type == ItemType.Health)
             {
+
                 stats.GainHealth((float)Amount);
             }
-            Destroy(gameObject);
+            Destroy(gameObject,0.2f);
         }
     }
 }

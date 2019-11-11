@@ -16,6 +16,7 @@ public class KeyTrigger : MonoBehaviour
 
     public bool CanActivateSwitch;
 
+
     public enum KeyTriggerType
     {
         KeyHole,
@@ -26,7 +27,8 @@ public class KeyTrigger : MonoBehaviour
     public KeyTriggerType type;
     public KeyCode TriggerButton = KeyCode.E; 
     public bool canActivate;
-    
+
+    public AudioSource SwitchSound;
     // Start is called before the first frame update
     void Start()
     {
@@ -41,6 +43,7 @@ public class KeyTrigger : MonoBehaviour
         {
             if (Input.GetKeyDown(TriggerButton))
             {
+                SwitchSound.Play();
                 // activate platform
                 Platform.gameObject.GetComponentInChildren<PlatformsMove>().Activated = true;
                 SwitchButtonObjects();
@@ -53,6 +56,7 @@ public class KeyTrigger : MonoBehaviour
         canActivate = true;
         if(type == KeyTriggerType.PressurePlate)
         {
+            SwitchSound.Play();
             Platform.gameObject.GetComponentInChildren<PlatformsMove>().Activated = true;
             SwitchButtonObjects();
         }
