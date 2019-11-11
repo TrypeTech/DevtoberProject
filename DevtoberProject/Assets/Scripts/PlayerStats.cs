@@ -22,8 +22,9 @@ public class PlayerStats : MonoBehaviour {
 
     // respawing
     public bool isRespawning;
-    private Vector3 respawnPoint;
+    public Vector3 respawnPoint;
     public GameObject DieEffect;
+    public float respawnTime = 2.5f;
 
 	// Use this for initialization
 	void Start () {
@@ -71,13 +72,7 @@ public class PlayerStats : MonoBehaviour {
 
             if (health <= 0)
             {
-                health = 0;
-                playerRenderer.enabled = false;
-                Instantiate(DieEffect, transform.position, transform.rotation);
-                movement.canMove = false;
-                Invoke("Respawn", 4f);
-                //Respawn();
-                Debug.Log("Player Had Died");
+                PlayerDie();
             }
             else
             {
@@ -92,6 +87,17 @@ public class PlayerStats : MonoBehaviour {
         }
     }
 
+    public void PlayerDie()
+    {
+        health = 0;
+        playerRenderer.enabled = false;
+        Instantiate(DieEffect, transform.position, transform.rotation);
+        movement.canMove = false;
+        Invoke("Respawn", respawnTime);
+        //Respawn();
+        Debug.Log("Player Had Died");
+    }
+
     public void GainHealth(float healthAmount)
     {
         health += healthAmount;
@@ -104,9 +110,22 @@ public class PlayerStats : MonoBehaviour {
 
     public void Respawn()
     {
+        // enable flash when respawning
+        invincibilityCounter = invincibilityLength;
+        playerRenderer.enabled = false;
+        flashCounter = flashLength;
+
+        // reEnable everything
         movement.canMove = true;
+        // Invoke("DelayMovement", 1.3f);
         playerRenderer.enabled = true;
         transform.position = respawnPoint;
         health = MaxPlayerHealth;
+    }
+
+    public void DelayMovement()
+    {
+
+        movement.canMove = true;
     }
 }

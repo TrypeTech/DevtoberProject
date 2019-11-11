@@ -6,6 +6,11 @@ public class KeyTrigger : MonoBehaviour
 {
 
     // Add the platform that you want to activate to the slot
+    // Add the Button On And button off gameobjects to the slot make sure the button off button is set
+
+    [Header("Buttons to switch when triggerd")]
+    public GameObject OffButtonObject;
+    public GameObject OnButtonObject;
 
     public GameObject Platform;
 
@@ -14,7 +19,8 @@ public class KeyTrigger : MonoBehaviour
     public enum KeyTriggerType
     {
         KeyHole,
-        Button
+        Button,
+        PressurePlate
     }
 
     public KeyTriggerType type;
@@ -24,7 +30,8 @@ public class KeyTrigger : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        OffButtonObject.gameObject.SetActive(true);
+        OnButtonObject.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -36,6 +43,7 @@ public class KeyTrigger : MonoBehaviour
             {
                 // activate platform
                 Platform.gameObject.GetComponentInChildren<PlatformsMove>().Activated = true;
+                SwitchButtonObjects();
             }
         }
     }
@@ -43,6 +51,12 @@ public class KeyTrigger : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         canActivate = true;
+        if(type == KeyTriggerType.PressurePlate)
+        {
+            Platform.gameObject.GetComponentInChildren<PlatformsMove>().Activated = true;
+            SwitchButtonObjects();
+        }
+
     }
 
     private void OnTriggerStay(Collider other)
@@ -55,5 +69,12 @@ public class KeyTrigger : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         canActivate = false;
+    }
+
+    public void SwitchButtonObjects()
+    {
+        // play sound effect
+        OffButtonObject.gameObject.SetActive(false);
+        OnButtonObject.gameObject.SetActive(true);
     }
 }

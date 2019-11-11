@@ -88,7 +88,7 @@ public class Enemy : MonoBehaviour {
 
         if (isIdle)
         {
-           anim.SetBool("isIdle", true);
+           anim.SetBool("IsIdle", true);
             if (distance <= MinDistanceToAttack)
             {
                 isIdle = false;

@@ -16,7 +16,7 @@ public class PlayerAttack : MonoBehaviour
     public KeyCode attackButton = KeyCode.A;
     private float timeBtwAttack = 0.3f;
     public float startTimeBtwAttack ;
-
+    public float AttackDelayTime = 0.3f;
     public Transform attackPos;
     public LayerMask whatIsEnemies;
     public float attackRange;
@@ -41,21 +41,7 @@ public class PlayerAttack : MonoBehaviour
             {
                //anim.speed = AnimationSpeed;
                 anim.SetTrigger("Attack");
-                Collider[] enemiesToDamage = Physics.OverlapSphere(attackPos.position, attackRange, whatIsEnemies);
-                for(int i = 0; i < enemiesToDamage.Length; i++)
-                {
-                    enemiesToDamage[i].GetComponent<Enemy>().TakeDamage(damage);
-
-
-                    // Add Force to enemy when hit
-                  if (enemiesToDamage[i].gameObject.GetComponent<Rigidbody>() != null && enemiesToDamage[i].gameObject.GetComponent<Enemy>().Invencible == false )
-                    {
-                        Vector3 direction = enemiesToDamage[i].transform.position - transform.position;
-                        direction.y = 0;
-                        enemiesToDamage[i].gameObject.GetComponent<Rigidbody>().AddForce(direction.normalized * enemyKnockBackStrenght, ForceMode.Impulse);
-                    }
-                       
-                }
+                Invoke("DelayAndAttack", AttackDelayTime);
             }
 
             timeBtwAttack = startTimeBtwAttack;
@@ -67,10 +53,34 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
+    // properly time the attack to when it acctually hits the enemy
+    public void DelayAndAttack()
+    {
+        Collider[] enemiesToDamage = Physics.OverlapSphere(attackPos.position, attackRange, whatIsEnemies);
+        for (int i = 0; i < enemiesToDamage.Length; i++)
+        {
+            enemiesToDamage[i].GetComponent<Enemy>().TakeDamage(damage);
+
+
+            // Add Force to enemy when hit
+            if (enemiesToDamage[i].gameObject.GetComponent<Rigidbody>() != null && enemiesToDamage[i].gameObject.GetComponent<Enemy>().Invencible == false)
+            {
+                Vector3 direction = enemiesToDamage[i].transform.position - transform.position;
+                direction.y = 0;
+                enemiesToDamage[i].gameObject.GetComponent<Rigidbody>().AddForce(direction.normalized * enemyKnockBackStrenght, ForceMode.Impulse);
+            }
+
+        }
+    }
+
+    // displayes in the editor where the attack point of the player is
     private void OnDrawGizmosSelected()
     {
       
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(attackPos.position, attackRange);
     }
+
+
+    
 }
