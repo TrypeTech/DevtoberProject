@@ -37,7 +37,7 @@ public class PlayerAttack : MonoBehaviour
     {
         if(timeBtwAttack <= 0)
         {
-            if (Input.GetKey(attackButton))
+            if (Input.GetKey(attackButton) || Input.GetKey(KeyCode.JoystickButton1))
             {
                //anim.speed = AnimationSpeed;
                 anim.SetTrigger("Attack");

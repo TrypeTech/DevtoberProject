@@ -70,11 +70,11 @@ public class Movement : MonoBehaviour {
             // input
             Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
             Vector2 inputDir = input.normalized;
-            bool running = Input.GetKey(KeyCode.LeftShift);
+            bool running = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.JoystickButton2);
 
             Move(inputDir, running);
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0))
             {
                 Jump();
             }
