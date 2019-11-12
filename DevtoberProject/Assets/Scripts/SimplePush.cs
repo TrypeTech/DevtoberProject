@@ -5,10 +5,16 @@ using UnityEngine;
 public class SimplePush : MonoBehaviour
 {
     // for this to work add a rigidbody to the object and a sphere Collider for collision It prevents cliping of tile level assets that prevent movement
+    // also add another box collider for collision to prevent player from sloping over the sphere collider set it a little hier then the sphere collider
     // and a box cillider trigger where the  point the player pushes the object is
     // on the rigid body constrain all the rotations 
     // and set the direction the object is moveing in the direction option
-
+    public enum PushableType
+    {
+        hitPush,
+        push
+    }
+    public PushableType pushType;
     public enum Direction
     {
         Forward,
@@ -21,6 +27,7 @@ public class SimplePush : MonoBehaviour
     Rigidbody rig;
     public float moveSpeed = 60f;
     public bool canPush;
+    public bool WasHit;
 
     // Start is called before the first frame update
     void Start()
@@ -56,7 +63,17 @@ public class SimplePush : MonoBehaviour
     {
         if (canPush)
         {
-            MoveObject();
+            if(pushType == PushableType.push){
+                MoveObject();
+            }
+            else if(pushType == PushableType.hitPush)
+            {
+                if (WasHit == true)
+                {
+                    MoveObject();
+                    WasHit = false;
+                }
+            }
         }
     }
 
@@ -65,6 +82,7 @@ public class SimplePush : MonoBehaviour
         if(other.tag == "Player")
         {
             canPush = true;
+            WasHit = false;
         }
     }
 
@@ -73,6 +91,12 @@ public class SimplePush : MonoBehaviour
         if(other.tag == "Player")
         {
             canPush = false;
+            WasHit = false;
         }
+    }
+
+    public void PlayerHitObject()
+    {
+        WasHit = true;
     }
 }

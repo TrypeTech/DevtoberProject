@@ -7,7 +7,7 @@ public class KeyTrigger : MonoBehaviour
 
     // Add the platform that you want to activate to the slot
     // Add the Button On And button off gameobjects to the slot make sure the button off button is set
-
+    // if it is a pushable object trigger set the tag of the pushable object to "Pushable"
     [Header("Buttons to switch when triggerd")]
     public GameObject OffButtonObject;
     public GameObject OnButtonObject;
@@ -21,7 +21,8 @@ public class KeyTrigger : MonoBehaviour
     {
         KeyHole,
         Button,
-        PressurePlate
+        PressurePlate,
+        PushableObjectTrigger
     }
 
     public KeyTriggerType type;
@@ -53,12 +54,22 @@ public class KeyTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        canActivate = true;
+      //  canActivate = true;
         if(type == KeyTriggerType.PressurePlate)
         {
+            if(other.gameObject.tag == "Player")
             SwitchSound.Play();
             Platform.gameObject.GetComponentInChildren<PlatformsMove>().Activated = true;
             SwitchButtonObjects();
+        }
+        else if (type == KeyTriggerType.PushableObjectTrigger)
+        {
+            if (other.gameObject.tag == "Pushable")
+            {
+                SwitchSound.Play();
+                Platform.gameObject.GetComponentInChildren<PlatformsMove>().Activated = true;
+                SwitchButtonObjects();
+            }
         }
 
     }

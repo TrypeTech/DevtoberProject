@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Pushable
   - Ledge
+  - Enemy
   layers:
   - Default
   - TransparentFX

@@ -13,6 +13,9 @@ public class PlayerAttack : MonoBehaviour
     // Ajust Attack range and you should see it in the editor the range
     // Add this script to the Object that has a animator
 
+    // add layer called Enemy to  pushables and enemies
+    // also add the tag Enemy to enimes an Pushable to pushables
+
     public KeyCode attackButton = KeyCode.A;
     private float timeBtwAttack = 0.3f;
     public float startTimeBtwAttack ;
@@ -59,18 +62,28 @@ public class PlayerAttack : MonoBehaviour
         Collider[] enemiesToDamage = Physics.OverlapSphere(attackPos.position, attackRange, whatIsEnemies);
         for (int i = 0; i < enemiesToDamage.Length; i++)
         {
-            enemiesToDamage[i].GetComponent<Enemy>().TakeDamage(damage);
-
-
-            // Add Force to enemy when hit
-            if (enemiesToDamage[i].gameObject.GetComponent<Rigidbody>() != null && enemiesToDamage[i].gameObject.GetComponent<Enemy>().Invencible == false)
+            if (enemiesToDamage[i].gameObject.tag == "Enemy")
             {
-                Vector3 direction = enemiesToDamage[i].transform.position - transform.position;
-                direction.y = 0;
-                enemiesToDamage[i].gameObject.GetComponent<Rigidbody>().AddForce(direction.normalized * enemyKnockBackStrenght, ForceMode.Impulse);
-            }
+                enemiesToDamage[i].GetComponent<Enemy>().TakeDamage(damage);
 
+
+                // Add Force to enemy when hit
+                if (enemiesToDamage[i].gameObject.GetComponent<Rigidbody>() != null && enemiesToDamage[i].gameObject.GetComponent<Enemy>().Invencible == false)
+                {
+                    Vector3 direction = enemiesToDamage[i].transform.position - transform.position;
+                    direction.y = 0;
+                    enemiesToDamage[i].gameObject.GetComponent<Rigidbody>().AddForce(direction.normalized * enemyKnockBackStrenght, ForceMode.Impulse);
+                }
+            }
+            else if(enemiesToDamage[i].gameObject.tag == "Pushable")
+            {
+                enemiesToDamage[i].gameObject.GetComponent<SimplePush>().PlayerHitObject();
+            }
         }
+
+        // do same for pushables
+
+        
     }
 
     // displayes in the editor where the attack point of the player is
