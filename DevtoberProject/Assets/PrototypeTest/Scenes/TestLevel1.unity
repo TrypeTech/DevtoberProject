@@ -43348,8 +43348,8 @@ Transform:
   - {fileID: 1023807467}
   - {fileID: 1676326219}
   - {fileID: 1910195871}
-  - {fileID: 476017272}
   - {fileID: 1671997525}
+  - {fileID: 476017272}
   - {fileID: 504431571}
   - {fileID: 1885072383}
   - {fileID: 1479329974}
@@ -87377,6 +87377,21 @@ PrefabInstance:
       propertyPath: RayForwardTarget
       value: 
       objectReference: {fileID: 1109024396}
+    - target: {fileID: 7137573246209244216, guid: 935ff60664a3d7d478947cc582ecb157,
+        type: 3}
+      propertyPath: jumpHeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7137573246209244216, guid: 935ff60664a3d7d478947cc582ecb157,
+        type: 3}
+      propertyPath: airControlPercent
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7137573246209244216, guid: 935ff60664a3d7d478947cc582ecb157,
+        type: 3}
+      propertyPath: jumpTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7137573246209244197, guid: 935ff60664a3d7d478947cc582ecb157,
         type: 3}
       propertyPath: HealthBar

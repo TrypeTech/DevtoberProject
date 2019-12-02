@@ -43,7 +43,17 @@ public class Movement : MonoBehaviour {
     // audio 
     public AudioSource jumpSound;
 
-  
+    // Double jump variables
+
+    public int extraJumps = 1;
+    private int currentJumps = 0;
+    public float DoubleJumpBoostAmount = 2f;
+
+    // Jump Boost
+    private float jumpTimeCounter;
+    public float jumpTime = 1f;
+    private bool isJumping;
+
     void Start()
     {
         canMove = true;
@@ -74,10 +84,35 @@ public class Movement : MonoBehaviour {
 
             Move(inputDir, running);
 
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0))
+        // check if can jump if player is grounded
+        if (controller.isGrounded)
+        {
+            isJumping = true;
+            jumpTimeCounter = jumpTime;
+            currentJumps = extraJumps;
+        }
+
+        // Jump if press jump button
+            if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.JoystickButton0) && isJumping == true)
             {
+            if (jumpTimeCounter > 0)
+            {
+                jumpTimeCounter -= Time.deltaTime;
                 Jump();
+            }else
+            {
+                isJumping = false;
             }
+            }
+        if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.JoystickButton0))
+        {
+            isJumping = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0) && isJumping == false)
+        {
+            DoubleJump();
+        }
             // animator
             float animationSpeedPercent = ((running) ? currentSpeed / runSpeed : currentSpeed / walkSpeed * .5f);
             // set name of forward animation here
@@ -137,11 +172,28 @@ public class Movement : MonoBehaviour {
     {
         if (controller.isGrounded)
         {
+           
             jumpSound.Play();
             float jumpVelocity = Mathf.Sqrt(-2 * gravity * jumpHeight);
             velocityY = jumpVelocity;
             Debug.Log("HitJumpbutton");
             animator.SetBool("Jumping", true);
+        }
+        
+
+    }
+
+    void DoubleJump()
+    {
+         if (controller.isGrounded == false && currentJumps > 0)
+        {
+            // do double jump
+            jumpSound.Play();
+            float jumpVelocity = Mathf.Sqrt(-2 * gravity * jumpHeight) * DoubleJumpBoostAmount;
+            velocityY = jumpVelocity;
+            Debug.Log("DoubleJumped");
+            animator.SetBool("Jumping", true);
+            currentJumps -= 1;
         }
     }
 
